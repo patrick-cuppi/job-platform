@@ -1,4 +1,4 @@
-package br.com.patickcuppi.job_platform.modules.candidate;
+package br.com.patickcuppi.job_platform.modules.company.entities;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -15,9 +15,9 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
+@Entity(name = "company")
 @Data
-@Entity(name = "candidate")
-public class CandidateEntity {
+public class CompanyEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.UUID)
@@ -35,11 +35,10 @@ public class CandidateEntity {
   @Length(min = 8, max = 100, message = "Password must be at least 8 characters long")
   private String password;
 
-  private String description;
+  private String website;
 
-  private String curriculum;
+  private String description;
 
   @CreationTimestamp
   private LocalDateTime createdAt;
-
 }
