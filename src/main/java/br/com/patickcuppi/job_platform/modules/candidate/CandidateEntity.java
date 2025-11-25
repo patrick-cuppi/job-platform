@@ -3,6 +3,7 @@ package br.com.patickcuppi.job_platform.modules.candidate;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.validator.constraints.Length;
 
 import jakarta.persistence.Entity;
@@ -38,6 +39,7 @@ public class CandidateEntity {
 
   private String curriculum;
 
+  @CreationTimestamp
   private LocalDateTime createdAt;
 
 }
