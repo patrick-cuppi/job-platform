@@ -1,0 +1,11 @@
+package br.com.patickcuppi.job_platform.modules.company.repositories;
+
+import java.util.UUID;
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import br.com.patickcuppi.job_platform.modules.company.entities.JobEntity;
+
+public interface JobRepository extends JpaRepository<JobEntity, UUID> {
+
+}
