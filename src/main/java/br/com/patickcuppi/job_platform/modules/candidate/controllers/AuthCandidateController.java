@@ -12,13 +12,13 @@ import br.com.patickcuppi.job_platform.modules.candidate.dto.AuthCandidateReques
 import br.com.patickcuppi.job_platform.modules.candidate.useCases.AuthCandidateUseCase;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/candidate")
 public class AuthCandidateController {
 
   @Autowired
   private AuthCandidateUseCase authCandidateUseCase;
 
-  @PostMapping("/candidate")
+  @PostMapping("/auth")
   public ResponseEntity<Object> auth(@RequestBody AuthCandidateRequestDTO authCandidateRequestDTO) {
 
     try {
