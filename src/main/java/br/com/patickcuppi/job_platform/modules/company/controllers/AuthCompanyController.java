@@ -13,13 +13,13 @@ import br.com.patickcuppi.job_platform.modules.company.useCases.AuthCompanyUseCa
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/company")
 public class AuthCompanyController {
 
   @Autowired
   private AuthCompanyUseCase authCompanyUseCase;
 
-  @PostMapping("/company")
+  @PostMapping("/auth")
   public ResponseEntity<Object> signIn(@Valid @RequestBody AuthCompanyDTO authCompanyDTO) {
 
     try {
