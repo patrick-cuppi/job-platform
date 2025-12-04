@@ -32,6 +32,7 @@ import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/candidate")
+@Tag(name = "Candidate", description = "Endpoints for Candidate")
 public class CandidateController {
   @Autowired
   private CreateCandidateUseCase createCandidateUseCase;
@@ -43,6 +44,13 @@ public class CandidateController {
   private ListAllJobsByFilterUseCase listAllJobsByFilterUseCase;
 
   @PostMapping("/")
+  @Operation(summary = "Create Candidate", description = "Create a new candidate profile in the job platform.")
+  @ApiResponses({
+      @ApiResponse(responseCode = "200", description = "Candidate created successfully.", content = {
+          @Content(schema = @Schema(implementation = CandidateEntity.class))
+      }),
+      @ApiResponse(responseCode = "400", description = "Bad Request - Invalid input data or validation errors.")
+  })
   public ResponseEntity<Object> create(@Valid @RequestBody CandidateEntity candidateEntity) {
     try {
       var result = this.createCandidateUseCase.execute(candidateEntity);
@@ -55,7 +63,6 @@ public class CandidateController {
 
   @GetMapping("/")
   @PreAuthorize("hasRole('CANDIDATE')")
-  @Tag(name = "Candidate", description = "Endpoints for Candidate")
   @Operation(summary = "Get Candidate Profile", description = "Retrieve the profile information of the authenticated candidate.")
   @ApiResponses({
       @ApiResponse(responseCode = "200", content = {
@@ -81,7 +88,6 @@ public class CandidateController {
 
   @GetMapping("/job")
   @PreAuthorize("hasRole('CANDIDATE')")
-  @Tag(name = "Candidate", description = "Endpoints for Candidate")
   @Operation(summary = "Find Jobs by Filter", description = "Retrieve a list of job postings that match the specified filter criteria.")
   @ApiResponses(@ApiResponse(responseCode = "200", content = {
       @Content(array = @ArraySchema(schema = @Schema(implementation = JobEntity.class)))
