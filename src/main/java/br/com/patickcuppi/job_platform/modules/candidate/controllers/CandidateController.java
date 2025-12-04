@@ -18,6 +18,14 @@ import br.com.patickcuppi.job_platform.modules.candidate.useCases.CreateCandidat
 import br.com.patickcuppi.job_platform.modules.candidate.useCases.ListAllJobsByFilterUseCase;
 import br.com.patickcuppi.job_platform.modules.candidate.useCases.ProfileCandidateUseCase;
 import br.com.patickcuppi.job_platform.modules.company.entities.JobEntity;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 
@@ -61,6 +69,12 @@ public class CandidateController {
 
   @GetMapping("/job")
   @PreAuthorize("hasRole('CANDIDATE')")
+  @Tag(name = "Candidate", description = "Endpoints for Candidate")
+  @Operation(summary = "Find Jobs by Filter", description = "Retrieve a list of job postings that match the specified filter criteria.")
+  @ApiResponses(@ApiResponse(responseCode = "200", content = {
+      @Content(array = @ArraySchema(schema = @Schema(implementation = JobEntity.class)))
+  }))
+  @SecurityRequirement(name = "jwt_auth")
   public List<JobEntity> findJobByFilter(@RequestParam String filter) {
     return this.listAllJobsByFilterUseCase.execute(filter);
   }
