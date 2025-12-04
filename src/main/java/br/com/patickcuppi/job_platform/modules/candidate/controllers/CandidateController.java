@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.patickcuppi.job_platform.modules.candidate.CandidateEntity;
+import br.com.patickcuppi.job_platform.modules.candidate.dto.ProfileCandidateResponseDTO;
 import br.com.patickcuppi.job_platform.modules.candidate.useCases.CreateCandidateUseCase;
 import br.com.patickcuppi.job_platform.modules.candidate.useCases.ListAllJobsByFilterUseCase;
 import br.com.patickcuppi.job_platform.modules.candidate.useCases.ProfileCandidateUseCase;
@@ -54,6 +55,17 @@ public class CandidateController {
 
   @GetMapping("/")
   @PreAuthorize("hasRole('CANDIDATE')")
+  @Tag(name = "Candidate", description = "Endpoints for Candidate")
+  @Operation(summary = "Get Candidate Profile", description = "Retrieve the profile information of the authenticated candidate.")
+  @ApiResponses({
+      @ApiResponse(responseCode = "200", content = {
+          @Content(schema = @Schema(implementation = ProfileCandidateResponseDTO.class))
+      }),
+      @ApiResponse(responseCode = "400", description = "Bad Request - Invalid input or request parameters."),
+      @ApiResponse(responseCode = "401", description = "Unauthorized - Authentication is required and has failed or has not yet been provided."),
+      @ApiResponse(responseCode = "403", description = "Forbidden - The authenticated user does not have permission to access the requested resource.")
+  })
+  @SecurityRequirement(name = "jwt_auth")
   public ResponseEntity<Object> get(HttpServletRequest request) {
     var idCandidate = request.getAttribute("candidate_id");
 
