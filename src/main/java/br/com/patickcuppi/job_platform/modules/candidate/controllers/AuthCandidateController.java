@@ -10,6 +10,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.patickcuppi.job_platform.modules.candidate.dto.AuthCandidateRequestDTO;
 import br.com.patickcuppi.job_platform.modules.candidate.useCases.AuthCandidateUseCase;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 
 @RestController
 @RequestMapping("/candidate")
@@ -19,6 +23,12 @@ public class AuthCandidateController {
   private AuthCandidateUseCase authCandidateUseCase;
 
   @PostMapping("/auth")
+  @Operation(summary = "Authenticate Candidate", description = "Authenticate a candidate and generate a JWT token.")
+  @ApiResponses({
+      @ApiResponse(responseCode = "200", description = "Authentication successful, JWT token returned."),
+      @ApiResponse(responseCode = "401", description = "Unauthorized - Invalid credentials.")
+  })
+  @SecurityRequirement(name = "jwt_auth")
   public ResponseEntity<Object> auth(@RequestBody AuthCandidateRequestDTO authCandidateRequestDTO) {
 
     try {
