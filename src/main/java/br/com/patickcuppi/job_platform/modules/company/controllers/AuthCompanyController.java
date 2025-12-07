@@ -10,6 +10,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.patickcuppi.job_platform.modules.company.dto.AuthCompanyDTO;
 import br.com.patickcuppi.job_platform.modules.company.useCases.AuthCompanyUseCase;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 
 @RestController
@@ -20,6 +24,12 @@ public class AuthCompanyController {
   private AuthCompanyUseCase authCompanyUseCase;
 
   @PostMapping("/auth")
+  @Operation(summary = "Authenticate Company", description = "Authenticate a company and generate a JWT token.")
+  @ApiResponses({
+      @ApiResponse(responseCode = "200", description = "Authentication successful, JWT token returned."),
+      @ApiResponse(responseCode = "401", description = "Unauthorized - Invalid credentials.")
+  })
+  @SecurityRequirement(name = "jwt_auth")
   public ResponseEntity<Object> signIn(@Valid @RequestBody AuthCompanyDTO authCompanyDTO) {
 
     try {

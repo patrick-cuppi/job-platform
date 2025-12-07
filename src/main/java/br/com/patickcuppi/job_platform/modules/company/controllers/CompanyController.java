@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.patickcuppi.job_platform.modules.company.entities.CompanyEntity;
 import br.com.patickcuppi.job_platform.modules.company.useCases.CreateCompanyUseCase;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 
 @RestController
@@ -19,6 +22,11 @@ public class CompanyController {
   private CreateCompanyUseCase createCompanyUseCase;
 
   @PostMapping("/")
+  @Operation(summary = "Create Company", description = "Create a new company profile in the job platform.")
+  @ApiResponses({
+      @ApiResponse(responseCode = "200", description = "Company created successfully."),
+      @ApiResponse(responseCode = "400", description = "Bad Request - Invalid input data or validation errors.")
+  })
   public ResponseEntity<Object> create(@Valid @RequestBody CompanyEntity companyEntity) {
     try {
       var result = this.createCompanyUseCase.execute(companyEntity);
