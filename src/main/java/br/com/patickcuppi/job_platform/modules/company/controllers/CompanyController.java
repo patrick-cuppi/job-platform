@@ -12,10 +12,12 @@ import br.com.patickcuppi.job_platform.modules.company.useCases.CreateCompanyUse
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/company")
+@Tag(name = "Company", description = "Endpoints for company")
 public class CompanyController {
 
   @Autowired
