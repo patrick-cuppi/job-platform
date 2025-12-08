@@ -2,6 +2,10 @@ package br.com.patickcuppi.job_platform.modules.candidate.useCases;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.when;
+
+import java.util.Optional;
+import java.util.UUID;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,7 +14,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import br.com.patickcuppi.job_platform.exceptions.JobNotFoundException;
 import br.com.patickcuppi.job_platform.exceptions.UserNotFoundException;
+import br.com.patickcuppi.job_platform.modules.candidate.CandidateEntity;
 import br.com.patickcuppi.job_platform.modules.candidate.CandidateRepository;
 import br.com.patickcuppi.job_platform.modules.company.repositories.JobRepository;
 
@@ -34,5 +40,23 @@ public class ApplyJobCandidateUseCaseTest {
         () -> applyJobCandidateUseCase.execute(null, null));
 
     assertEquals("User not found", ex.getMessage());
+  }
+
+  @Test
+  @DisplayName("Should not be able to apply job with job not found")
+  public void shouldNotBeAbleToApplyJobWithJobNotFound() {
+
+    var candidateIdMock = UUID.randomUUID();
+
+    var candidate = new CandidateEntity();
+    candidate.setId(candidateIdMock);
+
+    when(candidateRepository.findById(candidateIdMock))
+        .thenReturn(Optional.of(candidate));
+
+    JobNotFoundException ex = assertThrows(
+        JobNotFoundException.class,
+        () -> applyJobCandidateUseCase.execute(null, candidateIdMock));
+    assertEquals("Job not found", ex.getMessage());
   }
 }
