@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import br.com.patickcuppi.job_platform.modules.candidate.CandidateEntity;
 import br.com.patickcuppi.job_platform.modules.candidate.dto.ProfileCandidateResponseDTO;
+import br.com.patickcuppi.job_platform.modules.candidate.useCases.ApplyJobCandidateUseCase;
 import br.com.patickcuppi.job_platform.modules.candidate.useCases.CreateCandidateUseCase;
 import br.com.patickcuppi.job_platform.modules.candidate.useCases.ListAllJobsByFilterUseCase;
 import br.com.patickcuppi.job_platform.modules.candidate.useCases.ProfileCandidateUseCase;
@@ -42,6 +43,9 @@ public class CandidateController {
 
   @Autowired
   private ListAllJobsByFilterUseCase listAllJobsByFilterUseCase;
+
+  @Autowired
+  private ApplyJobCandidateUseCase applyJobCandidateUseCase;
 
   @PostMapping("/")
   @Operation(summary = "Create Candidate", description = "Create a new candidate profile in the job platform.")
@@ -95,5 +99,32 @@ public class CandidateController {
   @SecurityRequirement(name = "jwt_auth")
   public List<JobEntity> findJobByFilter(@RequestParam String filter) {
     return this.listAllJobsByFilterUseCase.execute(filter);
+  }
+
+  @PostMapping("/job/apply")
+  @PreAuthorize("hasRole('CANDIDATE')")
+  @Operation(summary = "Apply for a Job", description = "Allows an authenticated candidate to apply for a specific job posting.")
+  @ApiResponses({
+      @ApiResponse(responseCode = "200", description = "Application successful.", content = {
+          @Content(schema = @Schema(implementation = Object.class))
+      }),
+      @ApiResponse(responseCode = "400", description = "Bad Request - Invalid input data or validation errors."),
+      @ApiResponse(responseCode = "401", description = "Unauthorized - Authentication is required and has failed or has not yet been provided."),
+      @ApiResponse(responseCode = "403", description = "Forbidden - The authenticated user does not have permission to access the requested resource.")
+  })
+  @SecurityRequirement(name = "jwt_auth")
+  public ResponseEntity<Object> applyJob(HttpServletRequest request, @RequestBody UUID idJob) {
+    var idCandidate = request.getAttribute("candidate_id");
+
+    try {
+      var result = this.applyJobCandidateUseCase.execute(UUID.fromString(idCandidate.toString()), idJob);
+
+      return ResponseEntity.ok().body(result);
+
+    } catch (Exception e) {
+
+      return ResponseEntity.badRequest().body(e.getMessage());
+    }
+
   }
 }
