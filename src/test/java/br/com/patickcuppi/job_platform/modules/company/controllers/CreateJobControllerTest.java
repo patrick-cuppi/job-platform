@@ -1,5 +1,7 @@
 package br.com.patickcuppi.job_platform.modules.company.controllers;
 
+import java.util.UUID;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -69,4 +71,20 @@ public class CreateJobControllerTest {
     System.out.println(result);
   }
 
+  @Test
+  public void shouldNotBeAbleToCreateANewJobIfCompanyUnauthorized() throws Exception {
+
+    var createJobDTO = CreateJobDTO.builder()
+        .description("DESCRIPTION_TEST")
+        .benefits("BENEFITS_TEST")
+        .level("LEVEL_TEST")
+        .build();
+
+    mvc.perform(
+        MockMvcRequestBuilders.post("/company/job/")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(TestUtils.objectToJSON(createJobDTO))
+            .header("Authorization", TestUtils.generateToken(UUID.randomUUID(), "TEST_SECRET")))
+        .andExpect(MockMvcResultMatchers.status().isUnauthorized());
+  }
 }
