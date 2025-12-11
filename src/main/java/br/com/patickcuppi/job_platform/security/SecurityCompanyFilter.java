@@ -16,7 +16,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 @Component
-public class SecurityFilter extends OncePerRequestFilter {
+public class SecurityCompanyFilter extends OncePerRequestFilter {
 
   @Autowired
   private JWTProvider jwtProvider;
@@ -35,26 +35,26 @@ public class SecurityFilter extends OncePerRequestFilter {
       if (header != null) {
         var token = this.jwtProvider.validateToken(header);
 
-      if (token == null) {
-        response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        return;
+        if (token == null) {
+          response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+          return;
+        }
+
+        var roles = token.getClaim("roles").asList(Object.class);
+        var grants = roles.stream()
+            .map(
+                role -> new SimpleGrantedAuthority("ROLE_" + role.toString().toUpperCase()))
+            .toList();
+
+        request.setAttribute("company_id", token.getSubject());
+
+        UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
+            token.getSubject(),
+            null,
+            grants);
+        SecurityContextHolder.getContext().setAuthentication(auth);
       }
-
-      var roles = token.getClaim("roles").asList(Object.class);
-      var grants = roles.stream()
-      .map(
-        role -> new SimpleGrantedAuthority("ROLE_" + role.toString().toUpperCase())
-      ).toList();
-
-      request.setAttribute("company_id", token.getSubject());
-
-      UsernamePasswordAuthenticationToken auth = new UsernamePasswordAuthenticationToken(
-          token.getSubject(),
-                  null,
-          grants);
-      SecurityContextHolder.getContext().setAuthentication(auth);
     }
-  }
 
     filterChain.doFilter(request, response);
   }

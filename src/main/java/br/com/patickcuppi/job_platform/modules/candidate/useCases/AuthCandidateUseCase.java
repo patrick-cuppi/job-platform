@@ -8,13 +8,13 @@ import javax.naming.AuthenticationException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 
+import br.com.patickcuppi.job_platform.exceptions.UserNotFoundException;
 import br.com.patickcuppi.job_platform.modules.candidate.CandidateRepository;
 import br.com.patickcuppi.job_platform.modules.candidate.dto.AuthCandidateRequestDTO;
 import br.com.patickcuppi.job_platform.modules.candidate.dto.AuthCandidateResponseDTO;
@@ -35,7 +35,7 @@ public class AuthCandidateUseCase {
       throws AuthenticationException {
     var candidate = this.candidateRepository.findByUsername(authCandidateRequestDTO.username())
         .orElseThrow(() -> {
-          throw new UsernameNotFoundException("Username or password invalid");
+          throw new UserNotFoundException();
         });
 
     var passwordMatches = this.passwordEncoder.matches(authCandidateRequestDTO.password(),
