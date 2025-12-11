@@ -27,7 +27,7 @@ public class JWTCandidateProvider {
 
       return tokenDecoded;
     } catch (JWTVerificationException e) {
-      e.printStackTrace();
+
       return null;
     }
   }
