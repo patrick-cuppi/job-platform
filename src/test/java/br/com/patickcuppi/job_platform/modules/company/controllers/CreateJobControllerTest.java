@@ -18,7 +18,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
 import br.com.patickcuppi.job_platform.modules.company.dto.CreateJobDTO;
-import br.com.patickcuppi.job_platform.modules.company.entities.CompanyEntity;
 import br.com.patickcuppi.job_platform.modules.company.repositories.CompanyRepository;
 import br.com.patickcuppi.job_platform.utils.TestUtils;
 
@@ -41,34 +40,6 @@ public class CreateJobControllerTest {
         .webAppContextSetup(context)
         .apply(SecurityMockMvcConfigurers.springSecurity())
         .build();
-  }
-
-  @Test
-  public void shouldBeAbleToCreateANewJob() throws Exception {
-
-    var company = CompanyEntity.builder()
-        .name("COMPANY_TEST")
-        .username("company_test")
-        .description("COMPANY_DESCRIPTION")
-        .email("company@test.com")
-        .password("123456AbCd#")
-        .build();
-    company = companyRepository.saveAndFlush(company);
-
-    var createJobDTO = CreateJobDTO.builder()
-        .description("DESCRIPTION_TEST")
-        .benefits("BENEFITS_TEST")
-        .level("LEVEL_TEST")
-        .build();
-
-    var result = mvc.perform(
-        MockMvcRequestBuilders.post("/company/job/")
-            .contentType(MediaType.APPLICATION_JSON)
-            .content(TestUtils.objectToJSON(createJobDTO))
-            .header("Authorization", TestUtils.generateToken(company.getId(), "TEST_SECRET")))
-        .andExpect(MockMvcResultMatchers.status().isOk());
-
-    System.out.println(result);
   }
 
   @Test

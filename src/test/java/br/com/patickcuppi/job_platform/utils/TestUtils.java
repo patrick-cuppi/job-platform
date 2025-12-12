@@ -25,7 +25,7 @@ public class TestUtils {
 
   public static String generateToken(UUID companyId, String secret) {
 
-    Algorithm algorithm = Algorithm.HMAC256(secret);
+    Algorithm algorithm = Algorithm.HMAC256("TEST_SECRET");
 
     var expiresIn = Instant.now().plus(Duration.ofHours(2));
 
