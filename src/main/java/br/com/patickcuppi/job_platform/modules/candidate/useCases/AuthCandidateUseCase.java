@@ -44,6 +44,8 @@ public class AuthCandidateUseCase {
       throw new AuthenticationException("Username or password invalid");
     }
 
+    var roles = Arrays.asList("CANDIDATE");
+
     Algorithm algorithm = Algorithm.HMAC256(jwtSecret);
 
     var expiresIn = Instant.now().plus(Duration.ofHours(2));
@@ -52,12 +54,13 @@ public class AuthCandidateUseCase {
         .withExpiresAt(expiresIn)
         .withIssuer("CandidateJobPlatform")
         .withSubject(candidate.getId().toString())
-        .withClaim("roles", Arrays.asList("CANDIDATE"))
+        .withClaim("roles", roles)
         .sign(algorithm);
 
     var authCandidateResponse = AuthCandidateResponseDTO.builder()
         .access_token(token)
         .expires_in(expiresIn.toEpochMilli())
+        .roles(roles)
         .build();
 
     return authCandidateResponse;
