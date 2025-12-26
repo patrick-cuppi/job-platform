@@ -43,6 +43,8 @@ public class AuthCompanyUseCase {
       throw new AuthenticationException();
     }
 
+    var roles = Arrays.asList("COMPANY");
+
     Algorithm algorithm = Algorithm.HMAC256(secretKey);
 
     var expiresIn = Instant.now().plus(Duration.ofHours(2));
@@ -56,6 +58,7 @@ public class AuthCompanyUseCase {
     var authCompanyResponseDTO = AuthCompanyResponseDTO.builder()
         .access_token(token)
         .expires_in(expiresIn.toEpochMilli())
+        .roles(roles)
         .build();
 
     return authCompanyResponseDTO;
