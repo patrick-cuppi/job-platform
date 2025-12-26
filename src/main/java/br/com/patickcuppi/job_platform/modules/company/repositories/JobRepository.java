@@ -10,4 +10,6 @@ import br.com.patickcuppi.job_platform.modules.company.entities.JobEntity;
 public interface JobRepository extends JpaRepository<JobEntity, UUID> {
 
   List<JobEntity> findByDescriptionContainingIgnoreCase(String filter);
+
+  List<JobEntity> findByCompanyId(UUID companyId);
 }

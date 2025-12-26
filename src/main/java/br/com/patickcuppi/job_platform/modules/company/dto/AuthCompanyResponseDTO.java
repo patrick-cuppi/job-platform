@@ -1,5 +1,7 @@
 package br.com.patickcuppi.job_platform.modules.company.dto;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,4 +15,5 @@ public class AuthCompanyResponseDTO {
 
   private String access_token;
   private Long expires_in;
+  private List<String> roles;
 }
